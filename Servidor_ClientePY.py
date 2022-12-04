@@ -32,10 +32,12 @@ print("\nOs palpites do servidor são ALEATÓRIOS!\n")
 
 ClientePy = 0
 ClienteJava = 0
-
-while True:  # O servidor fica liberado por tempo indeterminado ou até a conexão ser encerrada.
+rodada = 0
+while True:
+    # O servidor fica liberado por tempo indeterminado ou até a conexão ser encerrada.
     # Aguarda um dado enviado pela rede de até 1024 Bytes, a função ‘recv’ possui somente 1 argumento que é o tamanho do Buffer.
     data = conn.recv(1024)  # 1024 Byter serão recebidos do client
+
 
     # print("Resposta do cliente:", data.decode())
 
@@ -67,6 +69,7 @@ while True:  # O servidor fica liberado por tempo indeterminado ou até a conex�
     ):
         ganhador = 'Cliente'
         ClienteJava = ClienteJava + 1
+        rodada = rodada + 1
 
     # Verifica quando o Servidor ganha a jogada
     if ((palpiteServ == 'Tesoura' and palpiteClient == 'Papel') or (
@@ -81,23 +84,25 @@ while True:  # O servidor fica liberado por tempo indeterminado ou até a conex�
             palpiteServ == 'Spock' and palpiteClient == 'Pedra')):
         ganhador = 'Servidor'
         ClientePy = ClientePy + 1
+        rodada = rodada + 1
 
     # Verificação em caso de empate
     if (palpiteClient == palpiteServ):
         ganhador = 'Empate'
+        rodada = rodada + 1
 
     # String de retorno para o cliente
-    result = '- Cliente Java: ' + str(palpiteClient) + '\n - Servidor / Cliente Py: ' + str(palpiteServ) + '\n=> Ganhador da Rodada: ' + str(
+    result = '- Cliente Java: ' + str(palpiteClient) + '\n- Servidor / Cliente Py: ' + str(palpiteServ) + '\n=> Ganhador da Rodada: ' + str(
         ganhador) + '\n' # Concatenação dos resultados, sendo eles apresentados para o cliente
 
     # Utilizado para enviar o resultodo para o cliente.
     print(result)
     print(f'ClientePy Pontuacao = {ClientePy}')
     print(f'ClienteJava Pontuacao = {ClienteJava}')
-    if(ClienteJava > ClientePy):
+    if(ClienteJava > ClientePy and rodada ==15):
         print('Cliente Java Vencedor')
-    if(ClientePy > ClienteJava):
+    if(ClientePy > ClienteJava and rodada==15):
         print('Cliente Py Vencedor')
-    if(ClientePy == ClienteJava):
+    if(ClientePy == ClienteJava and rodada==15):
         print('Empate')
     conn.sendall(bytes(str(result), 'utf8'))
